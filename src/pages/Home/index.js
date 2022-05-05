@@ -1,31 +1,39 @@
-import { useCallback } from 'react';
-import ListOfGifs from 'components/ListOfGifs'
-import { useGifs } from 'hooks/useGifs'
-import TrendingSearches from "components/TrendingSearches";
+import React from "react"
 import { useLocation } from "wouter"
-import SearchForm from 'components/SearchForm';
+import ListOfGifs from 'components/ListOfGifs'
+import {useGifs} from 'hooks/useGifs'
+import TrendingSearches from 'components/TrendingSearches'
+import SearchForm from 'components/SearchForm'
+import {Helmet} from "react-helmet"
 
 export default function Home() {
-    const [path, pushLocation] = useLocation()
-    const { loading, gifs } = useGifs()
-    
-    const handleSubmit = useCallback(({keyword}) => {
-        // navegar a otra ruta
-        pushLocation(`/search/${keyword}`)
-    }, [pushLocation])
+  const [_, pushLocation] = useLocation()
+  const {gifs} = useGifs()
 
-    return (
-        <>
-            <SearchForm onSubmit={handleSubmit} />
-            <div className="App-main">
-                <div className="App-results">
-                    <h3 className="App-title">Última búsqueda</h3>
-                    <ListOfGifs gifs={gifs} />
-                </div>
-                <div className="App-category">
-                    <TrendingSearches />
-                </div>
-            </div>
-        </>
-    )
+  const handleSubmitSearchForm = ({keyword}) => {
+    // navegar a otra ruta
+    pushLocation(`/search/${keyword}`)
+  }
+
+  return (
+    <>
+      <Helmet>
+        <title>Home | Giffy</title>
+      </Helmet>
+      <header className="o-header">
+        <SearchForm onSubmit={handleSubmitSearchForm} />
+      </header>
+      <div className="App-wrapper">
+        <div className="App-main">
+          <div className="App-results">
+            <h3 className="App-title">Última búsqueda</h3>
+            <ListOfGifs gifs={gifs} />
+          </div>
+          <div className="App-category">
+            <TrendingSearches />
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
